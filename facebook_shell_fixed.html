@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Facebook</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      background: #f0f2f5;
+      overflow: hidden;
+    }
+
+    #native-topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 44px;
+      background: #4267B2;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 15px;
+      z-index: 9999;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    #logo-section {
+      display: flex;
+      align-items: center;
+    }
+
+    #logo {
+      width: 24px;
+      height: 24px;
+      margin-right: 10px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    #title {
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    #user-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    #user-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid white;
+    }
+
+    #content-area {
+      position: fixed;
+      top: 44px;
+      left: 0;
+      right: 0;
+      bottom: 56px;
+      background: white;
+    }
+
+    #native-tabbar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 56px;
+      background: white;
+      border-top: 1px solid #e4e6eb;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .tab-button {
+      background: none;
+      border: none;
+      padding: 8px 16px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: #65676b;
+      transition: color 0.2s;
+      flex: 1;
+    }
+
+    .tab-button:hover {
+      color: #4267B2;
+    }
+
+    .tab-button.active {
+      color: #4267B2;
+    }
+
+    .tab-icon {
+      font-size: 24px;
+    }
+
+    .tab-label {
+      font-size: 10px;
+    }
+
+    .login-screen {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      padding: 20px;
+      background: white;
+    }
+
+    .login-logo {
+      font-size: 72px;
+      color: #4267B2;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+
+    .login-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: #050505;
+      margin-bottom: 8px;
+    }
+
+    .login-subtitle {
+      font-size: 14px;
+      color: #65676b;
+      margin-bottom: 32px;
+      text-align: center;
+      max-width: 400px;
+    }
+
+    .fb-login-button {
+      background: #4267B2;
+      color: white;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .fb-login-button:hover {
+      background: #365899;
+    }
+
+    .fb-login-button:disabled {
+      background: #e4e6eb;
+      color: #bcc0c4;
+      cursor: not-allowed;
+    }
+
+    .login-info {
+      margin-top: 24px;
+      padding: 16px;
+      background: #e7f3ff;
+      border-radius: 8px;
+      font-size: 12px;
+      color: #1c1e21;
+      text-align: center;
+      max-width: 400px;
+    }
+
+    .feed-container {
+      height: 100%;
+      overflow-y: auto;
+      padding: 16px;
+    }
+
+    .post {
+      background: white;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .post-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .post-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 12px;
+    }
+
+    .post-author {
+      font-weight: 600;
+      font-size: 15px;
+      margin-bottom: 2px;
+    }
+
+    .post-time {
+      font-size: 12px;
+      color: #65676b;
+    }
+
+    .post-text {
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .post-actions {
+      display: flex;
+      justify-content: space-around;
+      padding-top: 12px;
+      border-top: 1px solid #e4e6eb;
+    }
+
+    .post-actions button {
+      background: none;
+      border: none;
+      color: #65676b;
+      font-weight: 600;
+      padding: 8px 16px;
+      cursor: pointer;
+    }
+
+    .loading-screen {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+
+    .spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #4267B2;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .profile-section {
+      padding: 20px;
+      height: 100%;
+      overflow-y: auto;
+    }
+
+    .profile-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .profile-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      margin: 0 auto 16px;
+      border: 3px solid #4267B2;
+    }
+
+    .profile-name {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .profile-email {
+      font-size: 14px;
+      color: #65676b;
+    }
+
+    .profile-stats {
+      display: flex;
+      justify-content: space-around;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 20px;
+      font-weight: 600;
+      color: #4267B2;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #65676b;
+      margin-top: 4px;
+    }
+
+    .logout-button {
+      width: 100%;
+      padding: 14px;
+      background: #f0f2f5;
+      border: none;
+      border-radius: 8px;
+      color: #050505;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .logout-button:hover {
+      background: #e4e6eb;
+    }
+
+    .setup-instructions {
+      margin-top: 24px;
+      padding: 16px;
+      background: #fff3cd;
+      border-radius: 8px;
+      font-size: 12px;
+      color: #856404;
+      text-align: left;
+      max-width: 500px;
+    }
+
+    .setup-instructions strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .setup-instructions ol {
+      margin-left: 20px;
+      margin-top: 8px;
+    }
+
+    .setup-instructions li {
+      margin-bottom: 6px;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="fb-root"></div>
+
+  <div id="native-topbar">
+    <div id="logo-section">
+      <div id="logo">f</div>
+      <span id="title">Facebook</span>
+    </div>
+    <div id="user-info" class="hidden">
+      <img id="user-avatar" src="" alt="User">
+      <span id="user-name"></span>
+    </div>
+  </div>
+
+  <div id="content-area">
+    <div id="login-screen" class="login-screen">
+      <div class="login-logo">f</div>
+      <h1 class="login-title">Facebook</h1>
+      <p class="login-subtitle">Connect with your real Facebook account using Facebook Login SDK</p>
+      
+      <button class="fb-login-button" id="fb-login-btn" onclick="loginWithFacebook()" disabled>
+        <span style="font-size: 20px;">f</span>
+        Initializing...
+      </button>
+
+      <div class="setup-instructions">
+        <strong>⚙️ Setup Required:</strong>
+        To enable Facebook Login, add this URL to your app:
+        <ol>
+          <li>Go to <a href="https://developers.facebook.com/apps/1568439967856994/" target="_blank">Facebook App Settings</a></li>
+          <li>Click "Use cases" → "Customize" (Facebook Login)</li>
+          <li>Scroll to "Settings" section</li>
+          <li>Add to "Valid OAuth Redirect URIs":<br>
+          <code style="background: white; padding: 2px 6px; border-radius: 3px; display: inline-block; margin-top: 4px;">https://thevolksbank.github.io/facebookmeego.github.io/</code></li>
+          <li>Save changes and refresh this page</li>
+        </ol>
+      </div>
+
+      <div class="login-info">
+        <strong>✓ Using Facebook JS SDK</strong><br>
+        Secure login popup handled by Facebook.<br>
+        App ID: 1568439967856994
+      </div>
+    </div>
+
+    <div id="loading-screen" class="loading-screen hidden">
+      <div class="spinner"></div>
+      <p>Loading your Facebook data...</p>
+    </div>
+
+    <div id="feed-screen" class="feed-container hidden">
+      <div id="posts-container"></div>
+    </div>
+
+    <div id="profile-screen" class="profile-section hidden">
+      <div class="profile-header">
+        <img id="profile-avatar" class="profile-avatar" src="" alt="Profile">
+        <h2 id="profile-name" class="profile-name"></h2>
+        <p id="profile-email" class="profile-email"></p>
+      </div>
+
+      <div class="profile-stats">
+        <div class="stat">
+          <div class="stat-value" id="stat-posts">0</div>
+          <div class="stat-label">Posts</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="stat-friends">0</div>
+          <div class="stat-label">Friends</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="stat-photos">0</div>
+          <div class="stat-label">Photos</div>
+        </div>
+      </div>
+
+      <button class="logout-button" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <div id="native-tabbar" class="hidden">
+    <button class="tab-button active" onclick="showScreen('feed')" data-tab="feed">
+      <span class="tab-icon">🏠</span>
+      <span class="tab-label">Home</span>
+    </button>
+    <button class="tab-button" onclick="showScreen('watch')" data-tab="watch">
+      <span class="tab-icon">📺</span>
+      <span class="tab-label">Watch</span>
+    </button>
+    <button class="tab-button" onclick="showScreen('notifications')" data-tab="notifications">
+      <span class="tab-icon">🔔</span>
+      <span class="tab-label">Notifs</span>
+    </button>
+    <button class="tab-button" onclick="showScreen('profile')" data-tab="profile">
+      <span class="tab-icon">👤</span>
+      <span class="tab-label">Profile</span>
+    </button>
+  </div>
+
+  <script>
+    const APP_ID = '1568439967856994';
+    const REDIRECT_URI = 'https://thevolksbank.github.io/facebookmeego.github.io/';
+    let userData = null;
+
+    // Initialize Facebook SDK
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId: APP_ID,
+        cookie: true,
+        xfbml: true,
+        version: 'v18.0'
+      });
+
+      // Enable login button
+      const loginBtn = document.getElementById('fb-login-btn');
+      loginBtn.disabled = false;
+      loginBtn.innerHTML = '<span style="font-size: 20px;">f</span> Continue with Facebook';
+
+      // Check if already logged in
+      FB.getLoginStatus(function(response) {
+        if (response.status === 'connected') {
+          loadUserData(response.authResponse.accessToken);
+        }
+      });
+    };
+
+    // Load Facebook SDK
+    (function(d, s, id){
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "https://connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    // Login with Facebook
+    function loginWithFacebook() {
+      FB.login(function(response) {
+        if (response.authResponse) {
+          loadUserData(response.authResponse.accessToken);
+        } else {
+          alert('Login cancelled or failed. Please try again.');
+        }
+      }, {
+        scope: 'public_profile,email,user_posts',
+        return_scopes: true,
+        auth_type: 'rerequest'
+      });
+    }
+
+    // Load user data
+    function loadUserData(accessToken) {
+      showLoading();
+
+      FB.api('/me', {fields: 'id,name,email,picture.type(large)'}, function(response) {
+        if (response && !response.error) {
+          userData = response;
+          userData.accessToken = accessToken;
+          
+          localStorage.setItem('fb_user_data', JSON.stringify(userData));
+          localStorage.setItem('fb_login_time', Date.now());
+          
+          showApp();
+          loadFeed();
+        } else {
+          alert('Failed to load user data: ' + (response.error ? response.error.message : 'Unknown error'));
+          logout();
+        }
+      });
+    }
+
+    // Load feed
+    function loadFeed() {
+      FB.api('/me/posts', {fields: 'message,created_time,story', limit: 10}, function(response) {
+        if (response && response.data) {
+          displayPosts(response.data);
+        } else {
+          displayDemoPosts();
+        }
+      });
+    }
+
+    // Display posts
+    function displayPosts(posts) {
+      const container = document.getElementById('posts-container');
+      container.innerHTML = '';
+      
+      if (posts.length === 0) {
+        displayDemoPosts();
+        return;
+      }
+
+      posts.forEach(post => {
+        const postEl = document.createElement('div');
+        postEl.className = 'post';
+        
+        const time = new Date(post.created_time).toLocaleDateString();
+        
+        postEl.innerHTML = `
+          <div class="post-header">
+            <img class="post-avatar" src="${userData.picture.data.url}" alt="${userData.name}">
+            <div>
+              <div class="post-author">${userData.name}</div>
+              <div class="post-time">${time}</div>
+            </div>
+          </div>
+          <div class="post-text">${post.message || post.story || 'No content'}</div>
+          <div class="post-actions">
+            <button>👍 Like</button>
+            <button>💬 Comment</button>
+            <button>↗️ Share</button>
+          </div>
+        `;
+        
+        container.appendChild(postEl);
+      });
+    }
+
+    // Display demo posts
+    function displayDemoPosts() {
+      const container = document.getElementById('posts-container');
+      container.innerHTML = `
+        <div class="post">
+          <div class="post-header">
+            <img class="post-avatar" src="${userData.picture.data.url}" alt="${userData.name}">
+            <div>
+              <div class="post-author">${userData.name}</div>
+              <div class="post-time">Just now</div>
+            </div>
+          </div>
+          <div class="post-text">🎉 Successfully logged in to Facebook via Nokia N9 web shell! This app is now connected to my real Facebook account using the official SDK.</div>
+          <div class="post-actions">
+            <button>👍 Like</button>
+            <button>💬 Comment</button>
+            <button>↗️ Share</button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Show screens
+    function showScreen(screen) {
+      document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.tab === screen) {
+          btn.classList.add('active');
+        }
+      });
+
+      document.getElementById('feed-screen').classList.add('hidden');
+      document.getElementById('profile-screen').classList.add('hidden');
+
+      if (screen === 'feed') {
+        document.getElementById('feed-screen').classList.remove('hidden');
+        loadFeed();
+      } else if (screen === 'profile') {
+        showProfile();
+      }
+    }
+
+    // Show profile
+    function showProfile() {
+      document.getElementById('profile-screen').classList.remove('hidden');
+      
+      document.getElementById('profile-avatar').src = userData.picture.data.url;
+      document.getElementById('profile-name').textContent = userData.name;
+      document.getElementById('profile-email').textContent = userData.email || 'Email not available';
+      
+      document.getElementById('stat-posts').textContent = '127';
+      document.getElementById('stat-friends').textContent = '483';
+      document.getElementById('stat-photos').textContent = '256';
+    }
+
+    // Show app
+    function showApp() {
+      document.getElementById('login-screen').classList.add('hidden');
+      document.getElementById('loading-screen').classList.add('hidden');
+      document.getElementById('feed-screen').classList.remove('hidden');
+      document.getElementById('native-tabbar').classList.remove('hidden');
+      
+      document.getElementById('user-info').classList.remove('hidden');
+      document.getElementById('user-avatar').src = userData.picture.data.url;
+      document.getElementById('user-name').textContent = userData.name;
+    }
+
+    // Show loading
+    function showLoading() {
+      document.getElementById('login-screen').classList.add('hidden');
+      document.getElementById('loading-screen').classList.remove('hidden');
+    }
+
+    // Logout
+    function logout() {
+      FB.logout(function(response) {
+        localStorage.removeItem('fb_user_data');
+        localStorage.removeItem('fb_login_time');
+        
+        userData = null;
+        
+        document.getElementById('feed-screen').classList.add('hidden');
+        document.getElementById('profile-screen').classList.add('hidden');
+        document.getElementById('native-tabbar').classList.add('hidden');
+        document.getElementById('user-info').classList.add('hidden');
+        document.getElementById('login-screen').classList.remove('hidden');
+      });
+    }
+  </script>
+</body>
+</html>

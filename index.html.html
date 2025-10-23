@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Facebook</title>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="/facebookmeego.github.io/style.css">
+</head>
+<body>
+  <div id="fb-root"></div>
+
+  <div id="native-topbar">
+    <div id="logo-section">
+      <div id="logo">f</div>
+      <span id="title">Facebook</span>
+    </div>
+    <div id="user-info" class="hidden">
+      <img id="user-avatar" src="" alt="User">
+      <span id="user-name"></span>
+    </div>
+  </div>
+
+  <div id="content-area">
+    <div id="login-screen" class="login-screen">
+      <div class="login-logo">f</div>
+      <h1 class="login-title">Facebook</h1>
+      <p class="login-subtitle">Connect with your real Facebook account using Facebook Login SDK</p>
+      
+      <button class="fb-login-button" id="fb-login-btn" onclick="loginWithFacebook()" disabled>
+        <span style="font-size: 20px;">f</span>
+        Initializing...
+      </button>
+
+      <div class="setup-instructions">
+        <strong>⚙️ Setup Required:</strong>
+        To enable Facebook Login, add this URL to your app:
+        <ol>
+          <li>Go to <a href="https://developers.facebook.com/apps/1568439967856994/" target="_blank">Facebook App Settings</a></li>
+          <li>Click "Use cases" → "Customize" (Facebook Login)</li>
+          <li>Scroll to "Settings" section</li>
+          <li>Add to "Valid OAuth Redirect URIs":<br>
+          <code style="background: white; padding: 2px 6px; border-radius: 3px; display: inline-block; margin-top: 4px;">https://thevolksbank.github.io/facebookmeego.github.io/</code></li>
+          <li>Save changes and refresh this page</li>
+        </ol>
+      </div>
+
+      <div class="login-info">
+        <strong>✓ Using Facebook JS SDK</strong><br>
+        Secure login popup handled by Facebook.<br>
+        App ID: 1568439967856994
+      </div>
+    </div>
+
+    <div id="loading-screen" class="loading-screen hidden">
+      <div class="spinner"></div>
+      <p>Loading your Facebook data...</p>
+    </div>
+
+    <div id="feed-screen" class="feed-container hidden">
+      <div id="posts-container"></div>
+    </div>
+
+    <div id="profile-screen" class="profile-section hidden">
+      <div class="profile-header">
+        <img id="profile-avatar" class="profile-avatar" src="" alt="Profile">
+        <h2 id="profile-name" class="profile-name"></h2>
+        <p id="profile-email" class="profile-email"></p>
+      </div>
+
+      <div class="profile-stats">
+        <div class="stat">
+          <div class="stat-value" id="stat-posts">0</div>
+          <div class="stat-label">Posts</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="stat-friends">0</div>
+          <div class="stat-label">Friends</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="stat-photos">0</div>
+          <div class="stat-label">Photos</div>
+        </div>
+      </div>
+
+      <button class="logout-button" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <div id="native-tabbar" class="hidden">
+    <button class="tab-button active" onclick="showScreen('feed')" data-tab="feed">
+      <span class="tab-icon">🏠</span>
+      <span class="tab-label">Home</span>
+    </button>
+    <button class="tab-button" onclick="showScreen('watch')" data-tab="watch">
+      <span class="tab-icon">📺</span>
+      <span class="tab-label">Watch</span>
+    </button>
+    <button class="tab-button" onclick="showScreen('notifications')" data-tab="notifications">
+      <span class="tab-icon">🔔</span>
+      <span class="tab-label">Notifs</span>
+    </button>
+    <button class="tab-button" onclick="showScreen('profile')" data-tab="profile">
+      <span class="tab-icon">👤</span>
+      <span class="tab-label">Profile</span>
+    </button>
+  </div>
+
+  <script src="./script.js"></script>
+  <script src="/facebookmeego.github.io/script.js"></script>
+</body>
+</html>
